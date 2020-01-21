@@ -1,5 +1,5 @@
 export const registerJobSeeker = async jobseeker => {
-    const url = process.env.HOST + '/user/register'
+    const url = 'https://jobcore.herokuapp.com/api' + '/user/register'
     const settings = {
         method: 'POST',
         mode: 'cors',
@@ -16,7 +16,7 @@ export const registerJobSeeker = async jobseeker => {
 }
 
 export const registerEmployer = async data => {
-    const url = process.env.HOST + '/user/register'
+    const url = 'https://jobcore.herokuapp.com/api' + '/user/register'
     let employer = Object.entries(data).reduce((a, [k, v]) => (v ? { ...a, [k]: v } : a), {})
     const settings = {
         method: 'POST',
