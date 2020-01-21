@@ -13,12 +13,15 @@ const Positions = () => {
     const [offset, setOffset] = useState(0)
     const [loading, setLoading] = useState(true)
     const [noresults, setNoResults] = useState(false)
+    const [keywords, setKeywords] = useState("");
+    const [location, setLocation] = useState('Coral Gables')
 
     async function fetchData() {
         if (!noresults) {
             setLoading(true)
             //upcoming=true
-            const res = await fetch(`https://api.jobcore.co/api/public/shifts?limit=6&offset=${offset}`);
+            // const res = await fetch(`https://api.jobcore.co/api/public/shifts?limit=6&offset=${offset}`);
+            const res = await fetch(`http://127.0.0.1:8080/api/public/shifts?limit=6&offset=${offset}`);
             res
                 .json()
                 .then(res => {
@@ -49,11 +52,14 @@ const Positions = () => {
         }, 500);
     }
 
-    async function searchPosition(keywords) {
+    async function searchPosition(e) {
+        e.preventDefault();
         if (!noresults) {
             setLoading(true)
             //upcoming=true
-            const res = await fetch(`https://api.jobcore.co/api/public/shifts?limit=6&offset=${offset}keywords=${keywords}`);
+            // const res = await fetch(`https://api.jobcore.co/api/public/shifts?keywords=${keywords}`);
+            const res = await fetch(`http://127.0.0.1:8080/api/public/shifts?limit=6&offset=${offset}&keywords=${keywords}&location=${location}`);
+            console.log(res)
             res
                 .json()
                 .then(res => {
@@ -72,6 +78,7 @@ const Positions = () => {
                 .catch(err => setErrors(err));
         }
     }
+
     return (
         <Layout>
             <SEO title="Positions" />
@@ -87,23 +94,27 @@ const Positions = () => {
                 </h4>
                     <div>Want to find a job? We have 263</div>
 
-                    <form onSubmit={(e) => { e.preventDefault(); console.log(e) }}>
+                    <form>
                         <div className="input-group py-5 px-10 w-100">
                             <input
                                 type="text"
                                 className="form-control border-0 rounded-0 w-50"
                                 placeholder="Keywords"
+                                onChange={e => setKeywords(e.target.value)}
                                 size="20"
                             />
-                            <select class="custom-select border-top-0 border-bottom-0 border-right-0 w-25">
+                            <select class="custom-select border-top-0 border-bottom-0 border-right-0 w-25"
+                                defaultValue={location}
+                                onChange={(e) => setLocation(e.target.value)}
+                            >
                                 <option selected>Location</option>
-                                <option value="1">Miami Beach</option>
-                                <option value="2">Coral Gables</option>
-                                <option value="3">Downtown</option>
-                                <option value="4">Key Biscayne</option>
+                                <option value="Miami Beach">Miami Beach</option>
+                                <option value="Coral Gables">Coral Gables</option>
+                                <option value="Downtown">Downtown</option>
+                                <option value="Key Biscayne">Key Biscayne</option>
                             </select>
                             <div className="input-group-append rounded-0">
-                                <button type="submit" className="input-group-text btn-purple border-0 rounded-0 px-4" style={{ border: 'none' }}>
+                                <button onClick={(e) => searchPosition(e)} className="input-group-text btn-purple border-0 rounded-0 px-4" style={{ border: 'none' }}>
                                     Get Started
                         </button>
                             </div>
@@ -128,7 +139,7 @@ const Positions = () => {
                 {loading ? <img src={Spinner} /> : null}
                 {noresults ? <h4 className="pt-4">No more results found.</h4> : null}
             </div>
-        </Layout>
+        </Layout >
     )
 }
 
